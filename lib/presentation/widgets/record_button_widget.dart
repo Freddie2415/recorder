@@ -19,34 +19,28 @@ class _RecordButtonWidgetState extends State<RecordButtonWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: isRecording ? _onStop : _onRecording,
-      child: Container(
-        color: Colors.grey.shade200,
-        height: 150,
-        child: Center(
-          child: Container(
-            height: 70,
-            width: 70,
+    return Container(
+      height: 70,
+      width: 70,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(
+          color: const Color(0xff908F94),
+          width: 3,
+          // /Applications/Android Studio.app/Contents/plugins/gradle
+        ),
+      ),
+      child: Center(
+        child: GestureDetector(
+          onTap: isRecording ? _onStop : _onRecording,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: isRecording ? 30 : 57,
+            width: isRecording ? 30 : 57,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(50),
-              border: Border.all(
-                color: Colors.grey,
-                width: 3,
-                // /Applications/Android Studio.app/Contents/plugins/gradle
-              ),
-            ),
-            child: Center(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: isRecording ? 30 : 55,
-                width: isRecording ? 30 : 55,
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(isRecording ? 8 : 50),
-                ),
-              ),
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(isRecording ? 8 : 50),
             ),
           ),
         ),

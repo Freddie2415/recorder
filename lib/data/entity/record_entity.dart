@@ -1,6 +1,6 @@
 class RecordEntity {
   final String title;
-  final String createdAt;
+  final DateTime createdAt;
   final Duration duration;
   final String path;
 

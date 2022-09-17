@@ -38,21 +38,32 @@ class _HomeScreenState extends State<HomeScreen> {
           ).toList(),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: RecordButtonWidget(
-          onStop: (String path) async {
-            final Duration? duration = await player.setUrl(path);
-            setState(() {
-              records.add(
-                RecordEntity(
-                  title: "Record ${records.length + 1}",
-                  createdAt: DateTime.now().toLocal().toString(),
-                  duration: duration ?? const Duration(),
-                  path: path,
-                ),
-              );
-            });
-          },
+      bottomNavigationBar: Container(
+        height: 130,
+        decoration: BoxDecoration(color: const Color(0xffF2F1F6), boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            offset: const Offset(0, 1),
+          ),
+        ]),
+        child: Center(
+          child: SafeArea(
+            child: RecordButtonWidget(
+              onStop: (String path) async {
+                final Duration? duration = await player.setUrl(path);
+                setState(() {
+                  records.add(
+                    RecordEntity(
+                      title: "Record ${records.length + 1}",
+                      createdAt: DateTime.now().toLocal(),
+                      duration: duration ?? const Duration(),
+                      path: path,
+                    ),
+                  );
+                });
+              },
+            ),
+          ),
         ),
       ),
     );

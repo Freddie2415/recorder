@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../data/entity/record_entity.dart';
+import '../utils/date_formatter.dart';
+import '../utils/duration_formatter.dart';
 
 class RecordCardWidget extends StatelessWidget {
   final bool active;
@@ -23,11 +25,13 @@ class RecordCardWidget extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         color: Colors.white,
         child: AnimatedSize(
+          // curve: Curves.linear,
           duration: const Duration(milliseconds: 300),
           child: active
               ? _RecordCardActiveWidget(record: record)
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       record.title,
@@ -41,13 +45,13 @@ class RecordCardWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          record.createdAt,
+                          DateFormatter.format(record.createdAt),
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
                         ),
                         Text(
-                          record.duration.toString(),
+                          DurationFormatter.format(record.duration),
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
@@ -119,18 +123,19 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "widget.record.title",
-          style: TextStyle(
+        Text(
+          widget.record.title,
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 5),
         Text(
-          widget.record.createdAt,
+          DateFormatter.format(widget.record.createdAt),
           style: const TextStyle(
             color: Colors.grey,
           ),
@@ -161,17 +166,17 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  position.toString(),
+                  DurationFormatter.format(position),
                   style: const TextStyle(
                     color: Colors.grey,
                   ),
                 ),
                 Text(
-                  widget.record.duration.toString(),
+                  DurationFormatter.format(widget.record.duration),
                   style: const TextStyle(
                     color: Colors.grey,
                   ),
-                )
+                ),
               ],
             ),
           ],
@@ -189,15 +194,15 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
                 IconButton(
                   onPressed: () {
                     final Duration targetPosition =
-                        position - const Duration(seconds: 10) <
+                        position - const Duration(seconds: 5) <
                                 const Duration(seconds: 0)
                             ? const Duration(seconds: 0)
-                            : position - const Duration(seconds: 10);
+                            : position - const Duration(seconds: 5);
                     player.seek(
                       targetPosition,
                     );
                   },
-                  icon: const Icon(Icons.replay_10_rounded),
+                  icon: const Icon(Icons.replay_5_rounded),
                   iconSize: 30,
                 ),
                 IconButton(
@@ -210,15 +215,15 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
                 IconButton(
                   onPressed: () {
                     final Duration targetPosition =
-                        position + const Duration(seconds: 10) >
+                        position + const Duration(seconds: 5) >
                                 widget.record.duration
                             ? widget.record.duration
-                            : position + const Duration(seconds: 10);
+                            : position + const Duration(seconds: 5);
                     player.seek(
                       targetPosition,
                     );
                   },
-                  icon: const Icon(Icons.forward_10_rounded),
+                  icon: const Icon(Icons.forward_5_outlined),
                   iconSize: 30,
                 ),
               ],
@@ -240,7 +245,6 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
   }
 
   void _onPlay() async {
-    print(player.playerState);
     if (player.playerState.processingState == ProcessingState.idle) {
       await player.setUrl(widget.record.path);
       await player.setVolume(1);
