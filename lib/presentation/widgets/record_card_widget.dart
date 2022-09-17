@@ -188,23 +188,37 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
               children: [
                 IconButton(
                   onPressed: () {
-                    player.seek(Duration(
-                        milliseconds: position.inMilliseconds - 10000));
+                    final Duration targetPosition =
+                        position - const Duration(seconds: 10) <
+                                const Duration(seconds: 0)
+                            ? const Duration(seconds: 0)
+                            : position - const Duration(seconds: 10);
+                    player.seek(
+                      targetPosition,
+                    );
                   },
-                  icon: const Icon(Icons.replay_10),
+                  icon: const Icon(Icons.replay_10_rounded),
                   iconSize: 30,
                 ),
                 IconButton(
                   onPressed: isPlaying ? _onPause : _onPlay,
-                  icon: Icon(!isPlaying ? Icons.play_arrow : Icons.pause),
+                  icon: Icon(
+                    !isPlaying ? Icons.play_arrow_rounded : Icons.pause_rounded,
+                  ),
                   iconSize: 40,
                 ),
                 IconButton(
                   onPressed: () {
-                    player.seek(Duration(
-                        milliseconds: position.inMilliseconds + 10000));
+                    final Duration targetPosition =
+                        position + const Duration(seconds: 10) >
+                                widget.record.duration
+                            ? widget.record.duration
+                            : position + const Duration(seconds: 10);
+                    player.seek(
+                      targetPosition,
+                    );
                   },
-                  icon: const Icon(Icons.forward_10),
+                  icon: const Icon(Icons.forward_10_rounded),
                   iconSize: 30,
                 ),
               ],
@@ -226,8 +240,9 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
   }
 
   void _onPlay() async {
+    print(player.playerState);
     if (player.playerState.processingState == ProcessingState.idle) {
-      final Duration? duration = await player.setUrl(widget.record.path);
+      await player.setUrl(widget.record.path);
       await player.setVolume(1);
       player.play();
     } else {
