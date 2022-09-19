@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../data/entity/record_entity.dart';
+
+import '../cubits/records/records_cubit.dart';
+import '../widgets/empty_card_widget.dart';
 import '../widgets/record_button_widget.dart';
 import '../widgets/record_card_widget.dart';
 
@@ -20,23 +24,55 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
       appBar: AppBar(title: const Text("Recorder"), elevation: 0),
-      body: Container(
-        color: Colors.white,
-        child: ListView(
-          children: records.map(
-            (record) {
-              return RecordCardWidget(
-                active: currentRecord == record,
-                onTap: () {
-                  setState(() => currentRecord = record);
-                },
-                record: record,
-              );
-            },
-          ).toList(),
-        ),
+      body: BlocBuilder<RecordsCubit, RecordsState>(
+        builder: (context, state) {
+          if (state is RecordsLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is RecordsError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(state.message),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.refresh_outlined),
+                    label: const Text('Refresh'),
+                  ),
+                ],
+              ),
+            );
+          } else if (state is RecordsLoaded) {
+            if (state.records.isEmpty) {
+              return const EmptyCardWidget();
+            }
+            final record = state.records;
+
+            return ListView.builder(
+              itemCount: record.length,
+              itemBuilder: (context, index) {
+                return RecordCardWidget(
+                  active: currentRecord == record[index],
+                  record: record[index],
+                  onTap: () {
+                    setState(() => currentRecord = record[index]);
+                  },
+                  onRemove: (removeIndex) {
+                    BlocProvider.of<RecordsCubit>(context).removeRecords(
+                      index: removeIndex,
+                    );
+                  },
+                );
+              },
+            );
+          }
+          return const SizedBox();
+        },
       ),
       bottomNavigationBar: Container(
         height: 130,
@@ -51,27 +87,18 @@ class _HomeScreenState extends State<HomeScreen> {
             child: RecordButtonWidget(
               onStop: (String path) async {
                 final Duration? duration = await player.setUrl(path);
-                setState(() {
-                  records.add(
-                    RecordEntity(
-                      title: "Record ${records.length + 1}",
-                      createdAt: DateTime.now().toLocal(),
-                      duration: duration ?? const Duration(),
-                      path: path,
-                    ),
+
+                if (mounted) {
+                  BlocProvider.of<RecordsCubit>(context).addNewRecord(
+                    duration: duration!,
+                    path: path,
                   );
-                });
+                }
               },
             ),
           ),
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
   }
 }

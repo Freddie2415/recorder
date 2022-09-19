@@ -9,12 +9,14 @@ class RecordCardWidget extends StatelessWidget {
   final bool active;
   final VoidCallback onTap;
   final RecordEntity record;
+  final Function(int) onRemove;
 
   const RecordCardWidget({
     Key? key,
     required this.active,
     required this.onTap,
     required this.record,
+    required this.onRemove,
   }) : super(key: key);
 
   @override
@@ -28,7 +30,12 @@ class RecordCardWidget extends StatelessWidget {
           // curve: Curves.linear,
           duration: const Duration(milliseconds: 300),
           child: active
-              ? _RecordCardActiveWidget(record: record)
+              ? _RecordCardActiveWidget(
+                  record: record,
+                  onRemove: () {
+                    onRemove.call(record.index);
+                  },
+                )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -70,10 +77,12 @@ class RecordCardWidget extends StatelessWidget {
 
 class _RecordCardActiveWidget extends StatefulWidget {
   final RecordEntity record;
+  final VoidCallback onRemove;
 
   const _RecordCardActiveWidget({
     Key? key,
     required this.record,
+    required this.onRemove,
   }) : super(key: key);
 
   @override
@@ -229,7 +238,9 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
               ],
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                widget.onRemove.call();
+              },
               icon: const Icon(Icons.delete, color: Colors.blue),
               iconSize: 30,
             ),
