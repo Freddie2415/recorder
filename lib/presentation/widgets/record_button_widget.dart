@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:record/record.dart';
-
-import '../../service/record_service.dart';
+import 'package:just_audio/just_audio.dart';
 import '../cubits/record/record_cubit.dart';
+import '../utils/assets.dart';
 
 class RecordButtonWidget extends StatefulWidget {
   final void Function(String path) onStop;
@@ -18,36 +17,28 @@ class RecordButtonWidget extends StatefulWidget {
 }
 
 class _RecordButtonWidgetState extends State<RecordButtonWidget> {
+  final player = AudioPlayer();
   bool isRecording = false;
-
-  final record = Record();
-
-  @override
-  void initState() {
-    listenRecorder();
-    super.initState();
-  }
-
-  listenRecorder() async {
-    isRecording = await RecordService().isRecording();
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         if (isRecording) {
-          setState(() {
-            isRecording = false;
-          });
-          BlocProvider.of<RecordCubit>(context)
-              .stopRecording(onStop: widget.onStop);
+          await player.setAsset(Assets.audioRemoveRecord);
+          await player.play();
+          setState(() => isRecording = false);
+          if (mounted) {
+            BlocProvider.of<RecordCubit>(context)
+                .stopRecording(onStop: widget.onStop);
+          }
         } else {
-          setState(() {
-            isRecording = true;
-          });
-          BlocProvider.of<RecordCubit>(context).startRecording();
+          await player.setAsset(Assets.audioRecord);
+          await player.play();
+          setState(() => isRecording = true);
+          if (mounted) {
+            BlocProvider.of<RecordCubit>(context).startRecording();
+          }
         }
       },
       child: Container(
@@ -63,7 +54,8 @@ class _RecordButtonWidgetState extends State<RecordButtonWidget> {
         ),
         child: Center(
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
+            curve: Curves.fastOutSlowIn,
+            duration: const Duration(milliseconds: 250),
             height: isRecording ? 30 : 57,
             width: isRecording ? 30 : 57,
             decoration: BoxDecoration(

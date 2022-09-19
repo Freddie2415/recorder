@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 
 import '../../../data/entity/record_entity.dart';
-import '../../../service/records_service.dart';
+import '../../../data/service/records_service.dart';
 
 part 'records_state.dart';
 

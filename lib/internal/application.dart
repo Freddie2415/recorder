@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recorder/presentation/cubits/record/record_cubit.dart';
 
+import '../data/service/record_service.dart';
+import '../data/service/records_service.dart';
 import '../presentation/cubits/records/records_cubit.dart';
 import '../presentation/screens/home_screen.dart';
-import '../service/record_service.dart';
-import '../service/records_service.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
     final RecordService recordService = RecordService();
 
     // Cubits
-
     final RecordCubit recordCubit = RecordCubit(service: recordService);
     final RecordsCubit recordsCubit = RecordsCubit(service: recordsService);
 

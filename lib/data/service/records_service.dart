@@ -1,4 +1,4 @@
-import '../data/entity/record_entity.dart';
+import '../entity/record_entity.dart';
 
 class RecordsService {
   final List<RecordEntity> _recordList = [];

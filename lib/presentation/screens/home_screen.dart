@@ -18,13 +18,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final player = AudioPlayer();
-  List<RecordEntity> records = [];
   RecordEntity? currentRecord;
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Recorder"), elevation: 0),
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        excludeHeaderSemantics: true,
+        backgroundColor: const Color(0xffF2F1F6),
+        title: const Text("Recorder"),
+        elevation: 0,
+      ),
       body: BlocBuilder<RecordsCubit, RecordsState>(
         builder: (context, state) {
           if (state is RecordsLoading) {

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import '../../../service/record_service.dart';
+import '../../../data/service/record_service.dart';
 
 part 'record_state.dart';
 
