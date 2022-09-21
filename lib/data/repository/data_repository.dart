@@ -1,9 +1,11 @@
-abstract class  DataRepository {
+abstract class Specification<T> {
+  Future put(T item);
 
+  Future<List<T>> get();
 
-  void save();
+  Future delete(id);
 
-  void fetch();
+  Future update(id, T item);
 
-  void delete();
+  Future<void> deleteAll();
 }

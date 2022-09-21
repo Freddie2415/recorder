@@ -8,15 +8,15 @@ part 'records_state.dart';
 class RecordsCubit extends Cubit<RecordsState> {
   final RecordsService service;
 
-  RecordsCubit({required this.service}) : super(RecordsInitial()) {
-    getAllRecords();
-  }
+  RecordsCubit({
+    required this.service,
+  }) : super(RecordsInitial());
 
-  getAllRecords() {
+  getAllRecords() async {
     emit(RecordsLoading());
 
     try {
-      final records = service.getAllRecords();
+      final records = await service.getAllRecords();
 
       emit(RecordsLoaded(records: records));
     } catch (error) {
@@ -42,9 +42,9 @@ class RecordsCubit extends Cubit<RecordsState> {
 
   removeRecords({
     required int index,
-  }) {
+  }) async {
     try {
-      service.removeRecords(
+      await service.removeRecords(
         index: index,
       );
 

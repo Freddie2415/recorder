@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
 
     // Cubits
     final RecordCubit recordCubit = RecordCubit(service: recordService);
-    final RecordsCubit recordsCubit = RecordsCubit(service: recordsService);
+    final RecordsCubit recordsCubit = RecordsCubit(service: recordsService)
+      ..getAllRecords();
 
     return MultiBlocProvider(
       providers: [

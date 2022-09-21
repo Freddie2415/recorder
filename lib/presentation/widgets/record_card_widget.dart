@@ -3,7 +3,7 @@ import 'package:just_audio/just_audio.dart';
 
 import '../../data/entity/record_entity.dart';
 import '../utils/date_formatter.dart';
-import '../utils/duration_formatter.dart';
+import '../utils/duration_helper.dart';
 
 class RecordCardWidget extends StatelessWidget {
   final bool active;
@@ -33,7 +33,7 @@ class RecordCardWidget extends StatelessWidget {
               ? _RecordCardActiveWidget(
                   record: record,
                   onRemove: () {
-                    onRemove.call(record.index);
+                    onRemove.call(record.id);
                   },
                 )
               : Column(
@@ -58,7 +58,7 @@ class RecordCardWidget extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          DurationFormatter.format(record.duration),
+                          DurationHelper.format(record.duration),
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
@@ -175,13 +175,13 @@ class _RecordCardActiveWidgetState extends State<_RecordCardActiveWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  DurationFormatter.format(position),
+                  DurationHelper.format(position),
                   style: const TextStyle(
                     color: Colors.grey,
                   ),
                 ),
                 Text(
-                  DurationFormatter.format(widget.record.duration),
+                  DurationHelper.format(widget.record.duration),
                   style: const TextStyle(
                     color: Colors.grey,
                   ),

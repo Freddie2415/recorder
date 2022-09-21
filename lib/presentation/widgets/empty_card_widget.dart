@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
+import '../cubits/records/records_cubit.dart';
 import '../utils/assets.dart';
 
 class EmptyCardWidget extends StatelessWidget {
@@ -34,6 +36,13 @@ class EmptyCardWidget extends StatelessWidget {
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                BlocProvider.of<RecordsCubit>(context).getAllRecords();
+              },
+              child: const Text("Refresh"),
             ),
           ],
         ),
