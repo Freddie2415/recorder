@@ -40,6 +40,15 @@ class RecordsCubit extends Cubit<RecordsState> {
     }
   }
 
+  deleteAllRecords() {
+    try {
+      service.deleteAll();
+      getAllRecords();
+    } catch (error) {
+      emit(RecordsError(error.toString()));
+    }
+  }
+
   removeRecords({
     required int index,
   }) async {

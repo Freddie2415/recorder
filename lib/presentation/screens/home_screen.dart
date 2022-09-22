@@ -5,7 +5,6 @@ import 'package:just_audio/just_audio.dart';
 import '../../data/entity/record_entity.dart';
 
 import '../cubits/records/records_cubit.dart';
-import '../storage/records_storage.dart';
 import '../widgets/empty_card_widget.dart';
 import '../widgets/record_button_widget.dart';
 import '../widgets/record_card_widget.dart';
@@ -39,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              RecordsStorage().deleteAll();
+              BlocProvider.of<RecordsCubit>(context).deleteAllRecords();
             },
             icon: const Icon(Icons.delete),
           ),

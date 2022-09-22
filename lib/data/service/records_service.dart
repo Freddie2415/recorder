@@ -36,6 +36,11 @@ class RecordsService {
     await storage.delete(index);
   }
 
+  deleteAll() {
+    _recordList.clear();
+    storage.deleteAll();
+  }
+
   Future<List<RecordEntity>> getAllRecords() async {
     final data = await storage.get();
 
